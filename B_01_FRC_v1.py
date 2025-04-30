@@ -3,27 +3,27 @@ from tabulate import tabulate
 from datetime import date
 
 
-# Functions
+# Functions go here
 def make_statement(statement, decoration):
-    """Emphasises heading by adding decoration
+    """Emphasises headings by adding decoration
     at the start and end"""
 
     return f"{decoration * 3} {statement} {decoration * 3}\n"
 
 
 def yes_no_check(question):
-    """Checks that users enter yes / y or no / n to a question"""
+    """Checks that users enter yes / no / y / n"""
 
     while True:
 
         response = input(question).lower()
 
-        if response == "yes" or response == "y":
+        if response == "y" or response == "yes":
             return "yes"
-        elif response == "no" or response == "n":
+        elif response == "n" or response == "no":
             return "no"
-        else:
-            print("Please enter yes (y) or no (no).\n")
+
+        print(f"Please answer yes / no (y / n)")
 
 
 def instructions():
@@ -188,13 +188,13 @@ def currency(x):
 
 # Main routine goes here
 
-# initialise variables...
+# intialise variables...
 
 # assume we have no fixed expenses for now
 fixed_subtotal = 0
 fixed_panda_string = ""
 
-print(make_statement("Fund Raising Calculator", "💰"))
+print(make_statement("Fund Raising Calulator", "💰"))
 
 print()
 want_instructions = yes_no_check("Do you want to see the instructions? ")
@@ -213,21 +213,77 @@ quantity_made = num_check("Quantity being made: ", "integer")
 print("Let's get the variable expenses....")
 variable_expenses = get_expenses("variable", quantity_made)
 
-variable_panda = variable_expenses[0]
+variable_panda_string = variable_expenses[0]
 variable_subtotal = variable_expenses[1]
 
-# ask user if they have fixed expenses and retrieve them
+# ask user if they have fixed expenses and retrive them
 print()
 has_fixed = yes_no_check("Do you have fixed expenses? ")
 
 if has_fixed == "yes":
     fixed_expenses = get_expenses("fixed")
 
-    variable_panda = variable_expenses[0]
-    variable_subtotal = variable_expenses[1]
+    fixed_panda_string = fixed_expenses[0]
+    fixed_subtotal = fixed_expenses[1]
 
     # If the user has not entered any fixed expenses,
     # # Set empty panda to "" so that it does not display!
     if fixed_subtotal == 0:
         has_fixed = "no"
         fixed_panda_string = ""
+
+total_expenses = variable_subtotal + fixed_subtotal
+total_expenses_string = f"Total Expenses: ${total_expenses:.2f}"
+
+
+# Get profit Goal here.
+
+# strings / output area
+
+# **** Get current date for heading and filename ****
+today = date.today()
+
+# Get day, month and year as individual strings
+day = today.strftime("%d")
+month = today.strftime("%m")
+year = today.strftime("%Y")
+
+# Headings / Strings...
+main_heading_string = make_statement(f"Fund Raising Calculator "
+                                     f"({product_name}, {day}/{month}/{year})", "=")
+quantity_string = f"Quantity being made: {quantity_made}"
+variable_heading_string = make_statement("Variable Expenses", "-")
+variable_subtotal_string = f"Variable Expenses Subtotal: ${variable_subtotal:.2f}"
+
+# set up strings if we have fixed costs
+if has_fixed == "yes":
+    fixed_heading_string = make_statement("Fixed Expenses", "-")
+    fixed_subtotal_string = f"Fixed Expenses Subtotal: {fixed_subtotal:.2f}"
+
+# set fixed cost strings to blank if we don't have fixed costs
+else:
+    fixed_heading_string = make_statement("You have no Fixed Expenses", "-")
+    fixed_subtotal_string = "Fixed Expenses Subtotal: $0.00"
+
+# List of strings to be outputted / written to file
+to_write = [main_heading_string, quantity_string,
+            "\n", variable_heading_string, variable_panda_string,
+            variable_subtotal_string,
+            "\n", fixed_heading_string, fixed_panda_string,
+            fixed_subtotal_string, total_expenses_string]
+
+# Print area
+print()
+for item in to_write:
+    print(item)
+
+# create file to hold data (add .txt extension)
+file_name = f"{product_name}_{year}_{month}_{day}"
+write_to = "{}.txt".format(file_name)
+
+text_file = open(write_to, "w+")
+
+# write the item to file
+for item in to_write:
+    text_file.write(item)
+    text_file.write("\n")

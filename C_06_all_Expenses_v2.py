@@ -64,7 +64,7 @@ def get_expenses(exp_type, how_many=1):
     }
 
     # defaults for fixed expenses
-    amount = how_many  # how_many defaults to 1
+    amount = how_many   # how_many defaults to 1
     how_much_question = "How much? $"
 
     # loop to get expenses
@@ -146,8 +146,8 @@ print()
 variable_panda = variable_expenses[0]
 variable_subtotal = variable_expenses[1]
 
-print("Getting Fixed Cost...")
-fixed_expenses = get_expenses("fixed", quantity_made)
+print("Getting Fixed Costs...")
+fixed_expenses = get_expenses("fixed")
 print()
 fixed_panda = fixed_expenses[0]
 fixed_subtotal = fixed_expenses[1]
